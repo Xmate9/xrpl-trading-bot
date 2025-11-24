@@ -14,7 +14,7 @@ A comprehensive automated trading bot built for the XRP Ledger (XRPL) ecosystem.
 ## Installation
 
 ```bash
-git clone https://github.com/kinexbt/xrpl-trading-bot.git
+git clone https://github.com/Trum3it/xrpl-trading-bot.git
 cd xrpl-trading-bot
 npm install
 ```
