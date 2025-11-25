@@ -24,7 +24,7 @@ xrpl-trading-bot/
 │   └── bot.ts            # Main bot orchestrator
 ├── dist/                 # Compiled JavaScript (after build)
 ├── index.ts              # Entry point (TypeScript)
-├── filterAmmCreate.js    # AMM transaction checker utility
+├── filterAmmCreate.ts    # AMM transaction checker utility
 ├── tsconfig.json          # TypeScript configuration
 ├── package.json
 └── .env                  # Environment configuration
@@ -192,20 +192,20 @@ Configure copy trading settings in your user record in `data/state.json`:
 ## 🔧 Module Overview
 
 ### Sniper Module (`src/sniper/`)
-- **monitor.js**: Detects new tokens from AMM create transactions
-- **evaluator.js**: Evaluates tokens based on user criteria (rugcheck, whitelist, etc.)
-- **index.js**: Main sniper logic and orchestration
+- **monitor.ts**: Detects new tokens from AMM create transactions
+- **evaluator.ts**: Evaluates tokens based on user criteria (rugcheck, whitelist, etc.)
+- **index.ts**: Main sniper logic and orchestration
 
 ### Copy Trading Module (`src/copyTrading/`)
-- **monitor.js**: Monitors trader wallets for new transactions
-- **executor.js**: Executes copy trades based on detected transactions
-- **index.js**: Main copy trading logic and orchestration
+- **monitor.ts**: Monitors trader wallets for new transactions
+- **executor.ts**: Executes copy trades based on detected transactions
+- **index.ts**: Main copy trading logic and orchestration
 
 ### XRPL Module (`src/xrpl/`)
-- **client.js**: XRPL WebSocket client management
-- **wallet.js**: Wallet operations and utilities
-- **amm.js**: AMM trading functions (buy/sell)
-- **utils.js**: XRPL utility functions
+- **client.ts**: XRPL WebSocket client management
+- **wallet.ts**: Wallet operations and utilities
+- **amm.ts**: AMM trading functions (buy/sell)
+- **utils.ts**: XRPL utility functions
 
 ## 🛡️ Safety Features
 
