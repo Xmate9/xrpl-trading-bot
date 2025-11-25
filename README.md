@@ -89,44 +89,39 @@ xrpl-trading-bot/
 
 ## 🎯 Usage
 
-### Development (with TypeScript)
+### Quick Start (No Build Required)
+After `npm install`, you can run the bot directly:
+
 ```bash
-npm run dev
-# or with auto-reload
+# Start both sniper and copy trading
+npm start
+
+# Start only sniper
+npm run start:sniper
+
+# Start only copy trading
+npm run start:copy
+
+# Start with custom user ID
+npm start -- --user=my-user-id
+```
+
+### Development (with auto-reload)
+```bash
 npm run dev:watch
 ```
 
-### Production (compiled JavaScript)
+### Production (Optional: Compiled JavaScript)
+If you prefer to compile to JavaScript first:
 ```bash
 # Build first
 npm run build
 
-# Then start
-npm start
-# or
+# Then run compiled version
 node dist/index.js
 ```
 
-### Start Only Sniper
-```bash
-npm run start:sniper
-# or
-node dist/index.js --sniper
-```
-
-**Note:** Use `npm run` for custom scripts. The `start` script can be run with just `npm start`, but other scripts require `npm run`.
-
-### Start Only Copy Trading
-```bash
-npm run start:copy
-# or
-node dist/index.js --copy
-```
-
-### Start with Custom User ID
-```bash
-node dist/index.js --user=my-user-id
-```
+**Note:** The bot runs directly from TypeScript source using `ts-node`, so no build step is required. The `build` script is optional for users who prefer compiled JavaScript.
 
 ## 📋 Prerequisites
 

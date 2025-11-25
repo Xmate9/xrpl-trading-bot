@@ -15,8 +15,17 @@ export async function getClient(): Promise<Client> {
     }
 
     connectingPromise = (async () => {
-        persistentClient = new Client(config.xrpl.server);
-        await persistentClient.connect();
+        persistentClient = new Client(config.xrpl.server, {
+            connectionTimeout: 30000
+        });
+        
+        try {
+            await persistentClient.connect();
+        } catch (error) {
+            persistentClient = null;
+            connectingPromise = null;
+            throw new Error(`Failed to connect to XRPL server (${config.xrpl.server}): ${error instanceof Error ? error.message : 'Unknown error'}`);
+        }
         
         persistentClient.on('disconnected', async () => {
             try {

@@ -1,5 +1,5 @@
 import { getClient } from '../xrpl/client';
-import { getWallet } from '../xrpl/wallet';
+import { getWallet, getBalance, getTokenBalances } from '../xrpl/wallet';
 import { executeAMMBuy } from '../xrpl/amm';
 import { IUser } from '../database/models';
 import { User, UserModel } from '../database/user';
@@ -23,8 +23,15 @@ export async function startSniper(userId: string): Promise<Result> {
 
     try {
         const user = await User.findOne({ userId });
+    
         if (!user) {
             return { success: false, error: 'User not found' };
+        }
+
+        if (user.sniperActive && !isRunning) {
+            user.sniperActive = false;
+            const userModel = new UserModel(user);
+            await userModel.save();
         }
 
         if (!config.sniperUser.buyMode && (!user.whiteListedTokens || user.whiteListedTokens.length === 0)) {
@@ -47,6 +54,20 @@ export async function startSniper(userId: string): Promise<Result> {
         if (!user.sniperPurchases) {
             user.sniperPurchases = [];
         }
+
+        const client = await getClient();
+        const wallet = getWallet();
+        const xrpBalance = await getBalance(client, wallet.address);
+        const tokenBalances = await getTokenBalances(client, wallet.address);
+
+        console.log('Sniper Account Info:');
+        console.log(`  Wallet: ${wallet.address}`);
+        console.log(`  XRP Balance: ${xrpBalance.toFixed(6)} XRP`);
+        console.log(`  Token Holdings: ${tokenBalances.length}`);
+        console.log(`  Snipe Amount: ${snipeAmount} XRP`);
+        console.log(`  Buy Mode: ${config.sniperUser.buyMode ? 'Auto-buy' : 'Whitelist-only'}`);
+        console.log(`  Min Liquidity: ${config.sniperUser.minimumPoolLiquidity} XRP`);
+        console.log(`  Risk Score: ${config.sniperUser.riskScore}`);
 
         user.sniperActive = true;
         user.sniperStartTime = new Date();

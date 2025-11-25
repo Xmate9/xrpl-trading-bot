@@ -15,7 +15,7 @@ const bot = new XRPLTradingBot({
 });
 
 bot.start().catch(error => {
-    console.error('Fatal error:', error);
+    console.error('Error starting bot:', error);
     process.exit(1);
 });
 

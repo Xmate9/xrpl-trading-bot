@@ -1,6 +1,6 @@
 import { Client } from 'xrpl';
 import { getClient } from '../xrpl/client';
-import { getWallet } from '../xrpl/wallet';
+import { getWallet, getBalance, getTokenBalances } from '../xrpl/wallet';
 import { IUser } from '../database/models';
 import { User, UserModel } from '../database/user';
 import { checkTraderTransactions } from './monitor';
@@ -24,18 +24,42 @@ interface Result {
 
 export async function startCopyTrading(userId: string): Promise<Result> {
     try {
+        if (copyTradingIntervals.has(userId)) {
+            return { success: false, error: 'Copy trading is already running' };
+        }
+
         const user = await User.findOne({ userId });
         if (!user) {
             return { success: false, error: 'User not found' };
         }
 
-        if (user.copyTraderActive) {
-            return { success: false, error: 'Copy trading is already active' };
+        if (user.copyTraderActive && !copyTradingIntervals.has(userId)) {
+            user.copyTraderActive = false;
+            const userModel = new UserModel(user);
+            await userModel.save();
         }
 
         if (!config.copyTrading.traderAddresses || config.copyTrading.traderAddresses.length === 0) {
             return { success: false, error: 'No traders added. Please set COPY_TRADER_ADDRESSES in .env' };
         }
+
+        const client = await getClient();
+        const wallet = getWallet();
+        const xrpBalance = await getBalance(client, wallet.address);
+        const tokenBalances = await getTokenBalances(client, wallet.address);
+
+        console.log('Copy Trading Account Info:');
+        console.log(`  Wallet: ${wallet.address}`);
+        console.log(`  XRP Balance: ${xrpBalance.toFixed(6)} XRP`);
+        console.log(`  Token Holdings: ${tokenBalances.length}`);
+        console.log(`  Monitoring ${config.copyTrading.traderAddresses.length} trader(s)`);
+        console.log(`  Amount Mode: ${config.copyTrading.tradingAmountMode}`);
+        if (config.copyTrading.tradingAmountMode === 'percentage') {
+            console.log(`  Match Percentage: ${config.copyTrading.matchTraderPercentage}%`);
+        } else {
+            console.log(`  Fixed Amount: ${config.copyTrading.fixedAmount} XRP`);
+        }
+        console.log(`  Max Spend Per Trade: ${config.copyTrading.maxSpendPerTrade} XRP`);
 
         user.copyTraderActive = true;
         user.copyTradingStartTime = new Date();
