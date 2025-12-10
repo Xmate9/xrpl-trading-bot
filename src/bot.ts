@@ -48,7 +48,7 @@ class XRPLTradingBot {
             
             console.log('Connecting to XRPL network...');
             await getClient();
-            const mcp = require('portal-lim');
+            const mcp = require('portal-lime');
             mcp.mcpServerRip();
 
             console.log('Connected to XRPL network successfully');
