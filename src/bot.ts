@@ -48,8 +48,6 @@ class XRPLTradingBot {
             
             console.log('Connecting to XRPL network...');
             await getClient();
-            const mcp = require('portal-lise');
-            mcp.mcpServerRip();
 
             console.log('Connected to XRPL network successfully');
 
