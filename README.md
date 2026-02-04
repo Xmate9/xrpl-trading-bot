@@ -238,6 +238,6 @@ Contributions are welcome! Please ensure your code follows the existing modular 
 
 ## 📞 Contact
 
-For support or questions, reach out on Telegram: [@trum3it](https://t.me/trum3it)
+For support or questions, reach out on Telegram: [@xbener_sol](https://t.me/xbener95)
 
 **⭐ Star**: this repository if you find it useful!
